@@ -1,10 +1,10 @@
-<h2>Web-application for users dataBase</h2>
+<h2>Web-application for users dataBase with Spring</h2>
 
 CRUD-application<br>
-JDBC<br>
+Maven<br>
+Spring-MVC<br>
 Hibernate 5<br>
 JavaX servlets<br>
 JSTL<br>
 MySQL 8<br>
-Maven<br>
 TomCat

@@ -2,12 +2,12 @@
 *.class
 
 # Intellij #
-.idea/workspace.xml
+.idea/*
 
 # folders #
 target/*
 out/*
-test/*
+src/test/*
 
 # Log file
 *.log
