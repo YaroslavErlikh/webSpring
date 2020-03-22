@@ -1,16 +1,19 @@
 package yaroslav.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import yaroslav.model.User;
+import yaroslav.model.role.Role;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     <T> List<T> getAll();
 
     void delete(Long id);
 
-    void add(User user);
+    boolean add(User user);
 
     void edit(User user);
 
@@ -19,4 +22,10 @@ public interface UserService {
     User getById(Long id);
 
     User getByName(String name);
+
+    UserDetails loadUserByUsername(String username);
+
+    List<Role> getAllRoles();
+
+    boolean userIsExist(User user);
 }

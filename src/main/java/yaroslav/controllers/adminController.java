@@ -2,15 +2,15 @@ package yaroslav.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import yaroslav.model.User;
+import yaroslav.model.role.Role;
 import yaroslav.service.UserService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class adminController {
@@ -35,13 +35,42 @@ public class adminController {
     public ModelAndView editPage(@PathVariable("id") Long id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/admin/editUser");
-        modelAndView.addObject("user", service.getById(id));
+        modelAndView.addObject("userEditing", service.getById(id));
+        modelAndView.addObject("rolelist", service.getAllRoles());
         return modelAndView;
     }
 
     @PostMapping(value = "/admin/edit")
-    public ModelAndView editUser(@ModelAttribute("user") User user) {
+    public ModelAndView editUser(
+            @ModelAttribute("id") Long id,
+            @ModelAttribute("username") String username,
+            @ModelAttribute("password") String password,
+            @RequestParam("roles") String[] roles
+    ) {
+        User user = service.getById(id);
+        user.setUsername(username);
+        user.setPassword(password);
+
+        Set<Role> rolesNew = new HashSet<>();
+
+        for (String s : roles) {
+            if (s.equals("ROLE_ADMIN")) {
+                rolesNew.add(new Role(2L, "ROLE_ADMIN"));
+            }
+            if (s.equals("ROLE_USER")) {
+                rolesNew.add(new Role(1L, "ROLE_USER"));
+            }
+        }
+
+        user.setRoles(rolesNew);
+
         ModelAndView modelAndView = new ModelAndView();
+        if (!service.getByName(username).getId().equals(id) && service.userIsExist(user)) {
+            modelAndView.addObject("message", "Имя занято");
+            modelAndView.setViewName("/admin/editUser");
+            return modelAndView;
+        }
+
         modelAndView.setViewName("redirect:/admin");
         service.edit(user);
         return modelAndView;
@@ -58,7 +87,15 @@ public class adminController {
     public ModelAndView addUser(@ModelAttribute("user") User user) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin");
-        service.add(user);
+
+        if (!service.userIsExist(user)) {
+            modelAndView.setViewName("redirect:/admin");
+            service.add(user);
+            return modelAndView;
+        }
+
+        modelAndView.addObject("message", "Имя занято");
+        modelAndView.setViewName("redirect:/admin/addUser");
         return modelAndView;
     }
 

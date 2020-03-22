@@ -17,9 +17,13 @@
     <c:forEach var="user" items="${users}">
         <tr>
             <td>${user.id}</td>
-            <td>${user.name}</td>
-            <td>${user.pass}</td>
-            <td>${user.role}</td>
+            <td>${user.username}</td>
+            <td>${user.password}</td>
+            <td>
+                <c:forEach var="roles" items="${user.roles}">
+                    ${roles.name}<br>
+                </c:forEach>
+            </td>
             <td>
                 <form action="admin/editUser/${user.id}" method="get">
                     <input type="hidden" name="id" value="${user.id}"/>
@@ -37,8 +41,10 @@
 <form action="admin/add" method="get">
     <input type="submit" value="Добавить пользователя"/>
 </form>
-<form action="exit" method="post">
-    <input type="hidden" name="id" value="${user.getId()}"/>
-</form>
+<br>
+<jsp:include page="../butons_back.jsp"/>
+<br>
+<jsp:include page="../logout.jsp"/>
+
 </body>
 </html>

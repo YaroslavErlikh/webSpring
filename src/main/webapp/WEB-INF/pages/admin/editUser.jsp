@@ -1,31 +1,37 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="tf" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
-    <title>Edit user - ${user.id}</title>
+    <title>Edit user - ${userEditing.id}</title>
 </head>
 <body>
-<h5>Edit user - ${user.id}</h5>
-<c:url value="/admin/edit" var="var"/>
-<form action="${var}" method="post">
+<h3>${pageContext.request.userPrincipal.name}</h3>
+<br>
+<h5>Editing user - ${userEditing.id}</h5>
 
-    <input type="hidden" name="id" value="${user.id}">
+<tf:form action="/admin/edit" method="post" modelAttribute="userEditing">
 
-    <label for="name">Имя:</label>
-    <input type="text" name="name" id="name" value="${user.name}">
+    <input type="hidden" name="id" value="${userEditing.id}">
+
+    Имя:
+    <input type="text" name="username" value="${userEditing.username}">
+    ${message}
     <br>
-    <label for="pass">Пароль:</label>
-    <input type="text" name="pass" id="pass" value="${user.pass}">
+    Пароль:
+    <input type="text" name="password" value="${userEditing.password}">
     <br>
-    <label for="role">Права:</label>
-    <select id="role" name="role">
-        <option value="user" <c:if test="${user.role.equals('user')}" >selected</c:if>>user</option>
-        <option value="admin" <c:if test="${user.role.equals('admin')}" >selected</c:if>>admin</option>
-    </select>
-<%--    <p id="role"><input type="radio" name="role" value="admin" placeholder=${param.role}>admin<br>--%>
-<%--    <input type="radio" checked name="role" value="user" placeholder=${param.role}>user</p>--%>
+
+    <tf:checkboxes path="roles" items="${rolelist}" element="li" itemValue="name" itemLabel="name"/>
+
     <br>
     <input type="submit" value="Изменить">
-</form>
+</tf:form>
+<br>
+<jsp:include page="../butons_back.jsp"/>
+<br>
+<jsp:include page="../logout.jsp"/>
+
 </body>
 </html>

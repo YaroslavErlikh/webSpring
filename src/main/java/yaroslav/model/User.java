@@ -1,76 +1,102 @@
 package yaroslav.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import yaroslav.model.role.Role;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "tab_users")
+public class User implements UserDetails {
 
     @Id
-    @Column(name = "id",  columnDefinition = "bigint")
+    @Column(name = "id", columnDefinition = "bigint")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", columnDefinition = "varchar(50)", unique = true, nullable = false)
-    private String name;
+    @Column(name = "name", columnDefinition = "varchar(255)", unique = true, nullable = false)
+    private String username;
 
-    @Column(name = "password", columnDefinition = "varchar(50)", nullable = false)
-    private String pass;
+    @Column(name = "password", columnDefinition = "varchar(255)", nullable = false)
+    private String password;
 
-    @Column(name = "role", columnDefinition = "varchar(10) default 'user'", nullable = false)
-    private String role;
+    @Transient
+    private String passwordConfirm;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
 
     public User() {
-    }
-
-    public User(String name, String pass, String role) {
-        this.name = name;
-        this.pass = pass;
-        this.role = role;
-    }
-
-    public User(String name, String pass) {
-        this.name = name;
-        this.pass = pass;
-        role = "user";
-    }
-
-    public User(Long id, String name, String pass, String role) {
-        this.id = id;
-        this.name = name;
-        this.pass = pass;
-        this.role = role;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getPass() {
-        return pass;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public String getRole() {
-        return role;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
