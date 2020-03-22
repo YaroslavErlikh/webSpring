@@ -42,6 +42,14 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(password);
         ModelAndView modelAndView = new ModelAndView();
+
+        if (userService.userIsExist(user)) {
+            if (!userService.getByName(username).getId().equals(user.getId())) {
+                modelAndView.addObject("message", "Имя занято");
+                modelAndView.setViewName("/user/editProfile");
+                return modelAndView;
+            }
+        }
         modelAndView.setViewName("redirect:/user/profile");
         userService.edit(user);
         return modelAndView;

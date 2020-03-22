@@ -6,7 +6,7 @@
 <body>
 
 <h2>Редактировать профиль</h2>
-
+${message}
 <form action="/user/editProfileFine" method="post">
     <input type="text" name="username">
     <br>
