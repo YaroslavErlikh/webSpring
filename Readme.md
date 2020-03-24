@@ -3,8 +3,9 @@
 CRUD-application<br>
 Maven<br>
 Spring-MVC<br>
+Spring-Security<br>
 Hibernate 5<br>
-JavaX servlets<br>
+JPA Reposotpries<br>
 JSTL<br>
-MySQL 8<br>
-TomCat
+MySQL Server 8<br>
+TomCat 9
